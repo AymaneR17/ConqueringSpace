@@ -1,0 +1,103 @@
+﻿@page
+@model ConqueringSpace.Model.User
+@{
+    ViewData["Title"] = "Register";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            width: 100%;
+            z-index: 1000;
+            position: fixed;
+            top: 0;
+            background-color: #fff;
+        }
+
+        main {
+            margin-top: 70px; 
+            flex: 1; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            button:hover {
+                background-color: #45a049;
+            }
+
+        h2 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <main role="main" class="pb-3">
+        <form asp-action="Register" asp-controller="Register" method="post">
+            <h2>@ViewData["Title"]</h2>
+
+            <div>
+                <label asp-for="Name">Name</label>
+                <input asp-for="Name" />
+            </div>
+
+            <div>
+                <label asp-for="Password">Password</label>
+                <input asp-for="Password" type="password" />
+            </div>
+
+            <button type="submit">Register</button>
+        </form>
+    </main>
+</body>
+</html>

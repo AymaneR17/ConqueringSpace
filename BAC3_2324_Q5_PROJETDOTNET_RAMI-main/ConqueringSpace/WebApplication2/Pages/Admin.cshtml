@@ -1,0 +1,65 @@
+﻿@page
+@inject ConqueringSpace.Interfaces.ICelestialObjectService CelestialObjectService
+@model ConqueringSpace.Model.CelestialObject
+@{
+    
+    ViewData["Title"] = "Panel Admin";
+}
+
+<main role="main" class="pb-3">
+    <div class="container">
+        <form asp-action="CreateCelestialObject" asp-controller="CelestialObject" method="post" class="my-4 p-4 border">
+            <h2>@ViewData["Title"]</h2>
+
+            <div class="form-group">
+                <label asp-for="Name">Create a Celestial object (meteor, satellite, stars, earth)</label>
+                <input asp-for="Name" name="Name" class="form-control" />
+                <label>If you want more celestial objects, contact the IT service!</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+
+        <form asp-action="DeleteCelestialObject" asp-controller="CelestialObject" method="post" class="my-4 p-4 border">
+            <div class="form-group">
+                <label asp-for="Name">Select Celestial Object to Delete</label>
+                <select asp-for="Name" class="form-control">
+                    @foreach (var celestialObject in await CelestialObjectService.GetAll())
+                    {
+                        <option value="@celestialObject.Name">@celestialObject.Name</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+
+        <form asp-action="UpdateCelestialObject" asp-controller="CelestialObject" method="post" class="my-4 p-4 border">
+            <div class="form-group">
+                <label asp-for="Id">Select Celestial Object to Update</label>
+                <select asp-for="Id" class="form-control">
+                    @foreach (var celestialObject in await CelestialObjectService.GetAll())
+                    {
+                        <option value="@celestialObject.Id">@celestialObject.Name</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Name">Name</label>
+                <input asp-for="Name" name="Name" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PositionX">Position X</label>
+                <input asp-for="PositionX" name="PositionX" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PositionY">Position Y</label>
+                <input asp-for="PositionY" name="PositionY" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-success">Update</button>
+        </form>
+    </div>
+</main>

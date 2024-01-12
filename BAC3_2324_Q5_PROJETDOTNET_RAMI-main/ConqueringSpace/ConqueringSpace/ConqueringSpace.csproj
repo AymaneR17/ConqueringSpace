@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Pages\AdminUser.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="wwwroot\Images\earth.png" />
+    <None Remove="wwwroot\Images\meteor.png" />
+    <None Remove="wwwroot\Images\satellite.png" />
+    <None Remove="wwwroot\Images\spiral.png" />
+    <None Remove="wwwroot\Images\stars.png" />
+    <None Remove="wwwroot\Images\univers.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.14">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.14">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="wwwroot\lib\earth.png" />
+    <Resource Include="wwwroot\lib\meteor.png" />
+    <Resource Include="wwwroot\lib\satellite.png" />
+    <Resource Include="wwwroot\lib\spiral.png" />
+    <Resource Include="wwwroot\lib\stars.png" />
+    <EmbeddedResource Include="wwwroot\lib\univers.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\AdminUser.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\AdminUser.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\AdminUser.cshtml" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,435 @@
+﻿@page 
+@model IndexModel
+@inject ConqueringSpace.Interfaces.ICelestialObjectService CelestialObjectService
+@using ConqueringSpace.Model
+
+
+@{
+    var celestialObjectsList = ViewData["CelestialObjectList"] as List<CelestialObject>;
+    var connectedUser = ViewData["ConnectedUser"] as User;
+}
+
+<style>
+  form {
+    position: fixed;
+    top: 50px;
+    right: 10px;
+    z-index: 2;
+}
+
+    .backGround {
+        height: 100vh;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(#001F3F, #000);
+    }
+
+    .stars {
+        display: flex;
+        justify-content: center; 
+        align-items: center;
+        height: 100%;
+    }
+
+    .star {
+        position: absolute;
+        background-color: #FFF;
+        border-radius: 50%;
+        width: 2px;
+        height: 2px;
+    }
+
+        .star::before,
+        .star::after {
+            content: '';
+            position: absolute;
+            background-color: #FFF;
+            border-radius: 50%;
+            width: 2px;
+            height: 2px;
+        }
+
+        .star::before {
+            top: -1px;
+            left: -1px;
+        }
+
+        .star::after {
+            top: -1px;
+            left: 1px;
+        }
+
+        .star.star1 {
+            top: 10%;
+            left: 30%;
+        }
+
+        .star.star2 {
+            top: 40%;
+            left: 60%;
+        }
+
+        .star.star3 {
+            top: 70%;
+            left: 20%;
+        }
+
+        .star.star4 {
+            top: 20%;
+            left: 80%;
+        }
+
+        .star.star5 {
+            top: 50%;
+            left: 10%;
+        }
+
+        .star.star6 {
+            top: 90%;
+            left: 50%;
+        }
+
+        .star.star7 {
+            top: 30%;
+            left: 90%;
+        }
+
+        .star.star8 {
+            top: 60%;
+            left: 40%;
+        }
+
+        .star.star9 {
+            top: 80%;
+            left: 70%;
+        }
+
+        .star.star10 {
+            top: 15%;
+            left: 45%;
+        }
+
+    .satellite {
+        position: absolute;
+        width: 30px; 
+        height: 30px;
+        top: 40%;
+        left: 70%;
+        transform: translate(-50%, -50%);
+    }
+
+    .celestial-object {
+        position: absolute;
+        width: 30px; 
+        height: 30px;
+    }
+
+    #celestial-objects-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1; 
+    }
+
+    .custom-modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+    }
+
+    .custom-notification {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+    }
+
+    .custom-notification-bar {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        background: white;
+        padding: 10px;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .custom-notification-bar button {
+            cursor: pointer;
+    }
+
+    h3 {
+        display: inline-block;
+        margin-right: 10px; 
+    }
+
+    .form-group label {
+        color: green;
+    }
+
+</style>
+
+   
+<main role="main" class="pb-3 text-center">
+
+    <div>
+    @if (connectedUser != null){
+    <h3>Welcome, @connectedUser.Name !</h3>
+    }else{
+    <h3>Welcome to Conquering Space !</h3>
+    }
+</div>
+    @if (connectedUser != null)
+    {
+        <a  class="nav-link text-dark" asp-action="Logout" asp-controller="Login">
+            <p>Logout</p>
+        </a>
+        <div class="backGround">
+            <div class="stars">
+                <div class="star star1"></div>
+                <div class="star star2"></div>
+                <div class="star star3"></div>
+                <div class="star star4"></div>
+                <div class="star star5"></div>
+                <div class="star star6"></div>
+                <div class="star star7"></div>
+                <div class="star star8"></div>
+                <div class="star star9"></div>
+                <div class="star star10"></div>
+                <img src="/lib/earth.png" alt="Earth" />
+            </div>
+            <div id="celestial-objects-container"></div>
+        </div>
+
+
+
+        <form asp-action="PlaceCelestialObject" asp-controller="CelestialObject" method="post" class="my-4 p-4 border">
+            <div class="form-group">
+                <label>Place your celestial object!</label>
+                <select id="celestialDropDown" name="Id" class="form-control">
+                    @foreach (var celestialObject in celestialObjectsList)
+                    {
+                        <option value="@celestialObject.Id" data-image-path="@celestialObject.Image">@celestialObject.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Position X ( Min: 0 - Max: 1250 )</label>
+                <input name="PositionX" class="form-control" type="number" min="0" max="1250" />
+            </div>
+
+            <div class="form-group">
+                <label>Position Y ( Min: 0 - Max: 700 )</label>
+                <input name="PositionY" class="form-control" type="number" min="0" max="700" />
+            </div>
+            <button type="submit" class="btn btn-success">Place</button>
+        </form>
+
+
+
+        <script>
+
+            var isModalDisplayed = false;
+            var isNotificationEnabled = false;
+            var imagePath;
+            var isNotificationDisplayed = false;
+
+
+            function placeCelestialObject(positionX, positionY, imageName, celestialObjectName) {
+                var container = document.getElementById('celestial-objects-container');
+                var celestialElement = document.createElement('div');
+                celestialElement.className = 'celestial-object';
+
+                celestialElement.style.left = positionX + 'px';
+                celestialElement.style.top = positionY + 'px';
+
+                celestialElement.setAttribute('data-celestial-name', celestialObjectName);
+                celestialElement.celestialObjectName = celestialObjectName;
+
+                var imgElement = document.createElement('img');
+                var selectedCelestialObjectName = document.querySelector('[name="Id"] option:checked').text;
+
+                document.getElementById('celestialDropDown').addEventListener('change', function () {
+                    var selectedOption = this.options[this.selectedIndex];
+                    imagePath = selectedOption.getAttribute('data-image-path');
+                });
+
+                imgElement.src = imagePath;
+                celestialElement.appendChild(imgElement);
+
+                celestialElement.addEventListener('click', function () {
+                    openModal(selectedCelestialObjectName, positionX, positionY);
+                });
+
+                container.appendChild(celestialElement);
+
+                celestialElement.direction = 0.2;
+
+                function updatePosition() {
+                    var selectedCelestialObjectName = document.querySelector('[name="Id"] option:checked').text;
+
+                    positionX += celestialElement.direction;
+                    celestialElement.style.left = positionX + 'px';
+
+                    if (positionX >= container.clientWidth) {
+                        celestialElement.direction = -1;
+
+                    } else if (positionX <= 0) {
+
+                        celestialElement.direction = 1;
+                    }
+
+                    if (positionX >= container.clientWidth / 2 - 15 && positionX <= container.clientWidth / 2 + 15) {
+                        isModalDisplayed = true;
+
+                        showNotificationModal(selectedCelestialObjectName, positionX, positionY)
+
+                    }
+
+                    requestAnimationFrame(updatePosition);
+                }
+
+                updatePosition();
+            }
+
+            function openModal(celestialObjectName, positionX, positionY) {
+                var modal = document.createElement('div');
+                modal.className = 'custom-modal';
+
+                var content = document.createElement('div');
+                content.innerHTML = `
+                        <p>Nom: ${celestialObjectName}</p>
+                        <p>Position X: ${positionX}</p>
+                        <p>Position Y: ${positionY}</p>
+                        <label for="notificationCheckbox">Notification</label>
+                        <input type="checkbox" id="notificationCheckbox" />
+                        <button id="okButton">Ok</button>
+                        <button id="deleteButton">Supprimer</button>
+                        `;
+
+                modal.appendChild(content);
+
+                var okButton = modal.querySelector('#okButton');
+                okButton.addEventListener('click', function () {
+                    document.body.removeChild(modal);
+                    isModalDisplayed = false;
+                });
+
+                // Fonction pour supprimer l'objet céleste visuellement du conteneur
+                function deleteCelestialObjectVisual(celestialObjectName) {
+                    var container = document.getElementById('celestial-objects-container');
+                    var celestialElements = container.getElementsByClassName('celestial-object');
+
+
+                    // Parcourir tous les éléments célestes pour trouver celui qui correspond au nom fourni
+
+                    for (var i = 0; i < celestialElements.length; i++) {
+                        var celestialElement = celestialElements[i];
+                        var nameAttribute = celestialElement.getAttribute('data-celestial-name');
+
+                        if (nameAttribute === celestialObjectName) {
+                            container.removeChild(celestialElement);
+                            break; 
+                        }
+                    }
+                }
+
+                var deleteButton = modal.querySelector('#deleteButton');
+                deleteButton.addEventListener('click', function () {
+                    deleteCelestialObjectVisual(celestialObjectName);
+
+                    document.body.removeChild(modal);
+                    isModalDisplayed = false;
+                });
+
+                var notificationCheckbox = modal.querySelector('#notificationCheckbox');
+                notificationCheckbox.addEventListener('change', function () {
+                    isNotificationEnabled = notificationCheckbox.checked;
+                });
+
+                document.body.appendChild(modal);
+            }
+
+            function showNotificationModal(celestialObjectName, positionX, positionY) {
+                if (isNotificationEnabled && isModalDisplayed && !isNotificationDisplayed) {
+                    var notificationDialog = document.createElement('div');
+                    var selectedCelestialObjectName = document.querySelector('[name="Id"] option:checked').text;
+                    notificationDialog.className = 'custom-notification';
+                    notificationDialog.innerHTML = `
+                            <p>Nom de l'objet celeste : ${selectedCelestialObjectName}</p>
+                            <p>Se trouvant à la position X : ${positionX}</p>
+                            <p>Et la position Y :  ${positionY}</p>
+                            <p>Vous pouvez sortir voir l'objet céleste de vos yeux !</p>
+                            <button id="closeNotification">Fermer</button>
+                            `;
+
+                    document.body.appendChild(notificationDialog);
+
+                    var closeButton = notificationDialog.querySelector('#closeNotification');
+                    closeButton.addEventListener('click', function () {
+                        closeNotificationModal(notificationDialog);
+                    });
+                    isNotificationDisplayed = true;
+
+
+                }
+            }
+
+            function closeNotificationModal(notificationDialog) {
+                if (notificationDialog && notificationDialog.parentNode) {
+                    notificationDialog.parentNode.removeChild(notificationDialog);
+                    isNotificationDisplayed = false;
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                var celestialObjects = @Json.Serialize(await CelestialObjectService.GetAll());
+
+                celestialObjects.forEach(function (vdCelestialObject) {
+                    placeCelestialObject(vdCelestialObject.PositionX, vdCelestialObject.PositionY, vdCelestialObject.Image, vdCelestialObject.Name);
+                });
+            });
+
+
+            document.getElementById('celestialDropDown').addEventListener('change', function () {
+                var selectedOption = this.options[this.selectedIndex];
+                imagePath = selectedOption.getAttribute('data-image-path');
+
+                console.log('Chemin de l\'image sélectionnée : ' + imagePath);
+            });
+
+            document.querySelector('form').addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                var selectedCelestialObjectName = document.querySelector('[name="Id"] option:checked').text;
+                var positionX = parseInt(document.querySelector('[name="PositionX"]').value);
+                var positionY = parseInt(document.querySelector('[name="PositionY"]').value);
+
+                placeCelestialObject(positionX, positionY, imagePath, selectedCelestialObjectName);
+            });
+        </script>
+
+
+
+    }
+    else{ <h3>Please log in to access this page.</h3> }
+</main>
+  
